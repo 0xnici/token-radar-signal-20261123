@@ -154,7 +154,10 @@
   function choices(values, selected, label) {
     return [el('option', { value: 'all', text: label, selected: selected === 'all' ? 'selected' : null })]
       .concat(values.map(function (value) {
-        return el('option', { value: value, text: value === 'not-farm' ? 'WATCH + SKIP (non-FARM)' : value, selected: value === selected ? 'selected' : null });
+        var text = value === 'not-farm' ? 'WATCH + SKIP (non-FARM)'
+          : value === 'range_width' ? 'Honest range width'
+          : value === 'change_7d' ? '7-day TVL change' : value;
+        return el('option', { value: value, text: text, selected: value === selected ? 'selected' : null });
       }));
   }
 
