@@ -1,0 +1,6 @@
+# Local verification output. The grader never sees these directories; they are
+# produced by main.ts runs and compared byte for byte before a submission.
+out/
+out2/
+*.log
+.DS_Store
