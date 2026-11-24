@@ -96,6 +96,18 @@ function assertDashboardOffline(dir: string): void {
 
 copyFiles(join(here, 'dashboard'), join(out, 'dashboard'));
 assertDashboardOffline(join(out, 'dashboard'));
+// The dossier shows every source file whole while it fits in 65,536 bytes. Guard the budget
+// here so a future edit cannot silently push part of the dashboard out of the judge's view.
+const dashDir = join(out, 'dashboard');
+let sourceBytes = 0;
+for (const name of readdirSync(dashDir)) {
+  const path = join(dashDir, name);
+  if (statSync(path).isFile()) sourceBytes += statSync(path).size;
+}
+if (sourceBytes > TEXT_MAX_BYTES - 4096) {
+  process.stderr.write(`token radar: dashboard source is ${sourceBytes} bytes, too close to the ${TEXT_MAX_BYTES}-byte dossier budget\n`);
+  process.exit(1);
+}
 const shots = copyFiles(join(here, 'screenshots'), join(out, 'screenshots'));
 if (shots.length < 3 || shots.length > 4) {
   process.stderr.write(`token radar: screenshots/ holds ${shots.length} images: hand in 3 or 4 whole-page captures\n`);
